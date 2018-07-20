@@ -13,6 +13,7 @@ license=('MIT')
 depends=('glibc')
 makedepends=('git' 'go')
 provides=('lnd' 'lncli')
+conflicts=('lnd')
 source=("$pkgname::git+https://github.com/lightningnetwork/lnd.git")
 md5sums=('SKIP')
 
@@ -20,14 +21,14 @@ md5sums=('SKIP')
 # $1 real directory
 # $2 gopath directory
 _fake_gopath_pushd() {
-    mkdir -p "$GOPATH/src/${2%/*}"
-    rm -f "$GOPATH/src/$2"
-    ln -rsT "$1" "$GOPATH/src/$2"
-    pushd "$GOPATH/src/$2" >/dev/null || exit
+  mkdir -p "$GOPATH/src/${2%/*}"
+  rm -f "$GOPATH/src/$2"
+  ln -rsT "$1" "$GOPATH/src/$2"
+  pushd "$GOPATH/src/$2" >/dev/null || exit
 }
 
 _fake_gopath_popd() {
-    popd >/dev/null || exit
+  popd >/dev/null || exit
 }
 
 pkgver() {
@@ -36,15 +37,15 @@ pkgver() {
 }
 
 prepare() {
-    # Create GOPATH
-    mkdir -p "$srcdir/GOPATH"
+  # Create GOPATH
+  mkdir -p "$srcdir/GOPATH"
 }
 
 build() {
   export GOPATH="$srcdir/GOPATH"
-  _fake_gopath_pushd lnd-git github.com/lightningnetwork/lnd
+  _fake_gopath_pushd "$pkgname" github.com/lightningnetwork/lnd
   dep ensure -v
-  go install -v ./...
+  make && make install
   _fake_gopath_popd
 }
 
