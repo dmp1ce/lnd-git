@@ -4,7 +4,7 @@
 # Upstream: https://github.com/lightningnetwork/lnd
 
 pkgname=('lnd-git')
-pkgver=0.4.2.beta.385.g10b0df61
+pkgver=0.5.1.beta.96.g640fe255
 pkgrel=1
 pkgdesc='The Lighting Network Daemon, for secure off-chain bitcoin transactions.'
 arch=('i686' 'x86_64')
@@ -44,7 +44,6 @@ prepare() {
 build() {
   export GOPATH="$srcdir/GOPATH"
   _fake_gopath_pushd "$pkgname" github.com/lightningnetwork/lnd
-  dep ensure -v
   make && make install
   _fake_gopath_popd
 }
